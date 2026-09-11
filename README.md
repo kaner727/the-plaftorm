@@ -1,7 +1,7 @@
 # The Platform
 This repository refers to a simple, white-label, easily customizable course website.
 
-Small note: The code was originally written in Brazillian Portuguese (varible names, hmtls files, etc). I did use GPT-6 Astra to translate all instances and remove some of my old not necessary themes. The rest of the code was entirely manually written. 
+Small note: The code was originally written in Brazillian Portuguese (variable names, html files, etc). I did use GPT-6 Astra to translate all instances and remove some of my old not necessary themes. The rest of the code was entirely manually written. 
 
 ## Technologies
 - Python 3.12 + Django 6
