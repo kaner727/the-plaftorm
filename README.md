@@ -1,6 +1,8 @@
 # The Platform
 This repository refers to a simple, white-label, easily customizable course website.
 
+Small note: The code was originally written in Brazillian Portuguese (varible names, hmtls files, etc). I did use GPT-6 Astra to translate all instances and remove some of my old not necessary themes. The rest of the code was entirely manually written. 
+
 ## Technologies
 - Python 3.12 + Django 6
 - Django Allauth (for authentication)
@@ -86,8 +88,8 @@ That deletes all of the information you created while using the app. It will be 
 
 - **Course**: Holds the available Trails that the User can see. This is where the visual identity of the website is defined. 
 - **Trail**: Holds modules. 
-- **Módulo**: Holds classes and can have a cover image.
-- **Aula**: Where the content itself of the course is located. Superadmins can create classes of videos, text, pdfs and even tests.
+- **Module**: Holds classes and can have a cover image.
+- **Class**: Where the content itself of the course is located. Superadmins can create classes of videos, text, pdfs and even tests.
 
 To create, modify or delete any of the above mentioned structures, got to: `/superadmin/`.
 
