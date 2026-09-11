@@ -1,0 +1,3 @@
+{% if request.user.is_superuser %}
+    <a href="/superadmin/" class="block mt-4 text-blue-300 hover:text-blue-100">Superadmin</a>
+{% endif %}

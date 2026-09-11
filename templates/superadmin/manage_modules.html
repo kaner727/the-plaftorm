@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Modules</title>
+</head>
+<body>
+
+<div>
+    <header>
+        <h1>Manage Modules</h1>
+        <p>Create and edit the modules in each course.</p>
+    </header>
+    
+    <a href="{% url 'superadmin' %}">
+        <button>Back to Main Dashboard</button>
+    </a>
+
+    <!-- Creation form -->
+    <section>
+        <h2>New Module</h2>
+        <form method="POST" action="{% url 'create_module' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="trail">Trail</label>
+            <select name="trail" id="trail">
+                {% for trail in trails %}
+                    <option value="{{ trail.id }}">{{ trail.title }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="title">Module Title</label>
+            <input type="text" name="title" id="title" placeholder="e.g. Module 1 - Fundamentals" required>
+
+            <label for="order">Display Order</label>
+            <input type="number" name="order" id="order" min="0" value="0" required>
+
+            <label for="cover_image">Module Image</label>
+            <input type="file" name="cover_image" id="cover_image" accept="image/*">
+
+            <button type="submit">Create Module</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <!-- Listing + quick edit -->
+    <section>
+        <h2>Existing Modules</h2>
+
+        {% if modules %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Title</th>
+                        <th>Trail</th>
+                        <th>Quick Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for module in modules %}
+                    <tr>
+                        <td>{{ module.order }}</td>
+                        <td>{{ module.title }}</td>
+                        <td>{{ module.trail.title }}</td>
+                        <td>
+                            <details>
+                                <summary>Edit</summary>
+
+                                <form method="POST" action="{% url 'edit_module' module.id %}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                    <label for="trail_{{ module.id }}">Trail</label>
+                                    <select name="trail" id="trail_{{ module.id }}">
+                                        {% for trail in trails %}
+                                            <option value="{{ trail.id }}" {% if trail.id == module.trail.id %}selected{% endif %}>
+                                                {{ trail.title }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="title_{{ module.id }}">Title</label>
+                                    <input type="text" name="title" id="title_{{ module.id }}" value="{{ module.title }}" required>
+
+                                    <label for="order_{{ module.id }}">Order</label>
+                                    <input type="number" name="order" id="order_{{ module.id }}" value="{{ module.order }}" min="0" required>
+
+                                    <label for="cover_image_{{ module.id }}">Module Image</label>
+                                    <input type="file" name="cover_image" id="cover_image_{{ module.id }}" accept="image/*">
+                                    
+                                    <button type="submit">Save</button>
+                                </form>
+
+                                <form method="POST" action="{% url 'delete_module' module.id %}" onsubmit="return confirm('Are you sure you want to delete this module?')">
+                                    {% csrf_token %}
+                                    <button type="submit">Delete Module</button>
+                                </form>
+
+                            </details>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No modules have been created yet.</p>
+        {% endif %}
+
+    </section>
+</div>
+
+</body>
+</html>

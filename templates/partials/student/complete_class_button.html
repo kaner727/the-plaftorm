@@ -1,0 +1,10 @@
+<form method="post" class="mt-8" action="{% url 'complete_lesson' current_lesson.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">
+        {% if completed %}
+            ✓ Completed
+        {% else %}
+            Complete Lesson
+        {% endif %} 
+    </button>
+</form>

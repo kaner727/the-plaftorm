@@ -1,0 +1,79 @@
+<div>
+    <!-- Header -->
+    <header>
+        <div>
+            <h1>Operations Dashboard</h1>
+            <p>An exclusive area for curating content and managing platform students.</p>
+        </div>
+        <a href="{% url 'dashboard' %}">
+            <button>    
+                Back to Dashboard
+            </button>
+        </a>
+    </header>
+    
+    <section>  
+        <h2>Manage Trails</h2>
+        <a href="{% url 'manage_trails' %}">    
+            <button>Manage/Create trails</button>
+        </a>
+
+        <h2>Manage Courses</h2>
+        <a href="{% url 'manage_courses' %}">    
+            <button>Manage/Create courses</button>
+        </a>
+
+        <h2>Manage Modules</h2>
+        <a href="{% url 'manage_modules' %}">    
+            <button>Manage/Create modules</button>
+        </a>
+
+        <h2>Manage Lessons</h2>
+        <a href="{% url 'manage_lessons' %}">    
+            <button>Manage/Create lessons</button>
+        </a>
+
+
+    </section>
+
+    
+    
+    <!-- All students -->
+    <section>
+        <h2>All students</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in user_list %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>Active</td>
+                    <td>
+                        <form method="POST" action="{% url 'enroll' user.id %}">
+                            {% csrf_token %}
+                            <select name="course_id" onchange="this.form.submit()">
+                                <option value="" disabled {% if not user.course %}selected{% endif %}>
+                                    Enroll in...
+                                </option>
+                                {% for course in courses %}
+                                    <option value="{{ course.id }}" {% if course == user.course %}selected{% endif %}>
+                                        {{ course.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>

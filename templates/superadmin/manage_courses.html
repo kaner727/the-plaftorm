@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Courses</title>
+</head>
+<body>
+
+<div>
+    <header>
+        <h1>Manage Courses</h1>
+        <p>Create and edit platform courses.</p>
+    </header>
+
+    <a href="{% url 'superadmin' %}">
+        <button>Back to Main Dashboard</button>
+    </a>
+
+    <section>
+        <h2>New Course</h2>
+        <form method="POST" action="{% url 'create_course' %}">
+            {% csrf_token %}
+
+            <label for="title">Course Name</label>
+            <input type="text" name="title" id="title" placeholder="e.g. Company A Package" required>
+
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="4" placeholder="Describe the course..."></textarea>
+
+            <label for="theme_slug">Theme</label>
+            <select name="theme_slug" id="theme_slug">
+                {% for slug, name in themes %}
+                    <option value="{{ slug }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Course Trails</label>
+            {% for trail in trails %}
+                <div>
+                    <input type="checkbox" name="trails" value="{{ trail.id }}" id="trail_{{ trail.id }}">
+                    <label for="trail_{{ trail.id }}">{{ trail.title }}</label>
+                </div>
+            {% empty %}
+                <p>No trails have been created yet. <a href="{% url 'manage_trails' %}">Create trail</a></p>
+            {% endfor %}
+
+            <button type="submit">Create Course</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Existing Courses</h2>
+
+        {% if courses %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Theme</th>
+                    <th>Trails</th>
+                    <th>Quick Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.title }}</td>
+                    <td>{{ course.description }}</td>
+                    <td>{{ course.get_theme_slug_display }}</td>
+                    <td>
+                        {% for trail in course.trails.all %}
+                            {{ trail.title }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            —
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <details>
+                            <summary>Edit</summary>
+
+                            <form method="POST" action="{% url 'edit_course' course.id %}">
+                                {% csrf_token %}
+
+                                <label>Course Name</label>
+                                <input type="text" name="title" value="{{ course.title }}" required>
+
+                                <label>Description</label>
+                                <textarea name="description" rows="4">{{ course.description }}</textarea>
+
+                                <label>Theme</label>
+                                <select name="theme_slug">
+                                    {% for slug, name in themes %}
+                                        <option value="{{ slug }}" {% if course.theme_slug == slug %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <label>Course Trails</label>
+                                {% for trail in trails %}
+                                    <div>
+                                        <input type="checkbox" name="trails" value="{{ trail.id }}" id="trail_edit_{{ course.id }}_{{ trail.id }}"
+                                            {% if trail in course.trails.all %}checked{% endif %}>
+                                        <label for="trail_edit_{{ course.id }}_{{ trail.id }}">{{ trail.title }}</label>
+                                    </div>
+                                {% endfor %}
+
+                                <button type="submit">Save</button>
+                            </form>
+
+                            <form method="POST" action="{% url 'delete_course' course.id %}" onsubmit="return confirm('Are you sure you want to delete this course?')">
+                                {% csrf_token %}
+                                <button type="submit">Delete Course</button>
+                            </form>
+                        </details>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No courses have been created yet.</p>
+        {% endif %}
+    </section>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends base_module %}
+{% block lesson_content %}
+    <div class="prose max-w-3xl text-slate-700">
+        {{ current_lesson.get_text_content }}
+    </div>
+    <form method="post" class="mt-8" action="{% url 'complete_lesson' current_lesson.id %}">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-primary">
+            {% if completed %}
+                ✓ Completed
+            {% else %}
+                 Complete Lesson
+            {% endif %} 
+        </button>
+    </form>
+    
+    {% include 'partials/superadmin/delete_lesson_progress.html' with lesson_progress=lesson_progress %}
+
+{% endblock %}

@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ current_lesson.title }} — {{ module.title }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-100 font-sans">
+<div class="flex h-screen">
+    <h1>G4 THEME</h1>
+    <!-- Sidebar -->
+    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col">
+        <div class="p-5 border-b border-slate-200">
+            <a href="{% url 'dashboard' %}" class="text-sm text-blue-600 hover:underline">← Back</a>
+            <p class="text-xs text-slate-400 mt-2 uppercase tracking-wide">{{ module.trail.title }}</p>
+            <h2 class="font-bold text-slate-800 mt-1 text-lg">{{ module.title }}</h2>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto p-4 space-y-4">
+            {% for category_name, category_lessons in lessons_by_category.items %}
+                <div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wide px-3 mb-1">
+                        {{ category_name }}
+                    </p>
+                    {% for lesson in category_lessons %}
+                    <a href="{% url 'module_view' module.id %}?lesson={{ lesson.id }}"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition
+                            {% if current_lesson.id == lesson.id %}
+                                bg-blue-50 text-blue-700 font-semibold
+                            {% else %}
+                                text-slate-600 hover:bg-slate-100
+                            {% endif %}">
+                        {{ lesson.title }}
+                    </a>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <!-- Lesson content -->
+    <main class="flex-1 overflow-y-auto p-10">
+        <p class="text-xs text-slate-400 uppercase tracking-wide mb-1">
+            {{ current_lesson.get_lesson_type_display }}
+        </p>
+        <h1 class="text-2xl font-bold text-slate-800 mb-6">{{ current_lesson.title }}</h1>
+
+        {% block lesson_content %}{% endblock %}
+    </main>
+
+</div>
+</body>
+</html>

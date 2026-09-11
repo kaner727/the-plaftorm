@@ -1,0 +1,32 @@
+# python e virtual environment 
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# databases
+*.sqlite3
+media/
+staticfiles/
+
+# arquivos docker e assossiados
+.docker/
+
+# vscode e ides
+.vscode/
+.idea/
+.DS_Store
+
+# .env
+.env
+*.env
+
+# initializing scripts
+init.bat 
+resetdb.bat 
+init.ps1
+resetdb.ps1
+soft_resetdb.ps1

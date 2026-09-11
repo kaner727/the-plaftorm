@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Trails</title>
+</head>
+<body>
+
+<div>
+    <header>
+        <h1>Manage Trails</h1>
+        <p>Create and edit platform trails.</p>
+    </header>
+
+    <a href="{% url 'superadmin' %}">
+        <button>Back to Main Dashboard</button>
+    </a>
+
+    <section>
+        <h2>New Trail</h2>
+        <form method="POST" action="{% url 'create_trail' %}">
+            {% csrf_token %}
+
+            <label for="title">Trail Name</label>
+            <input type="text" name="title" id="title" placeholder="e.g. Data Intelligence Trail" required>
+
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="4" placeholder="Describe the trail..."></textarea>
+
+            <button type="submit">Create Trail</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Existing Trails</h2>
+
+        {% if trails %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Modules</th>
+                    <th>Quick Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trail in trails %}
+                <tr>
+                    <td>{{ trail.title }}</td>
+                    <td>{{ trail.description }}</td>
+                    <td>{{ trail.modules.count }} module{{ trail.modules.count|pluralize }}</td>
+                    <td>
+                        <details>
+                            <summary>Edit</summary>
+
+                            <form method="POST" action="{% url 'edit_trail' trail.id %}">
+                                {% csrf_token %}
+
+                                <label>Trail Name</label>
+                                <input type="text" name="title" value="{{ trail.title }}" required>
+
+                                <label>Description</label>
+                                <textarea name="description" rows="4">{{ trail.description }}</textarea>
+
+                                <button type="submit">Save</button>
+                            </form>
+
+                            <form method="POST" action="{% url 'delete_trail' trail.id %}" onsubmit="return confirm('Are you sure you want to delete this trail? Its modules will also be deleted.')">
+                                {% csrf_token %}
+                                <button type="submit">Delete Trail</button>
+                            </form>
+                        </details>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No trails have been created yet.</p>
+        {% endif %}
+    </section>
+</div>
+
+</body>
+</html>

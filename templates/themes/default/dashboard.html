@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Prevent clipping on hover — use translateY instead of scale */
+        .module-card {
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            transform-origin: center center;
+        }
+        .module-card:hover {
+            border-color: rgb(82 82 91); /* zinc-600 */
+            transform: translateY(-6px);
+        }
+
+        /* Extra carousel space to prevent cards from being clipped when raised */
+        .carousel-track {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-zinc-950 text-white font-sans">
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-56 bg-black border-r border-zinc-800 p-6 flex flex-col shrink-0">
+        <h2 class="text-2xl font-bold text-red-600 mb-8 tracking-tight">
+            The Platform
+        </h2>
+
+        <div class="flex-grow"></div>
+
+        <a href="/accounts/logout/"
+           class="block text-sm text-zinc-400 hover:text-white transition py-1">
+            Sign Out
+        </a>
+
+        {% if is_super %}
+        <a href="/superadmin/"
+           class="block text-sm text-blue-400 hover:text-blue-300 transition py-1 mt-1">
+            Superadmin
+        </a>
+        {% endif %}
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-10">
+
+        <h1 class="text-3xl font-bold mb-10 tracking-tight">
+            Your Course
+        </h1>
+
+        {% if course %}
+
+            <section class="mb-16">
+
+                <!-- Course header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-xl font-bold tracking-tight">
+                            {{ course.title }}
+                        </h2>
+                        <span class="text-sm text-zinc-500">
+                            {{ completed_lessons }}/{{ total_lessons }} lessons completed
+                        </span>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="w-full bg-zinc-800 rounded-full h-1.5">
+                        <div class="bg-red-600 h-1.5 rounded-full transition-all duration-500"
+                             style="width: {{ progress }}%">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trails -->
+                {% for trail in course.trails.all %}
+
+                <div class="mb-10">
+
+                    <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
+                        {{ trail.title }}
+                    </h3>
+
+                    <div class="relative">
+
+                        <!-- Left button -->
+                        <button
+                            onclick="scrollCarousel('trail-{{ trail.id }}', -700)"
+                            class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/90 hover:bg-black border border-zinc-800 text-white px-3 py-7 rounded-r-lg transition">
+                            ❮
+                        </button>
+
+                        <!-- Carousel -->
+                        <div
+                            id="trail-{{ trail.id }}"
+                            class="flex gap-4 overflow-x-auto hide-scrollbar scroll-smooth px-10 carousel-track">
+
+                            {% for module in trail.modules.all %}
+
+                            <a href="{% url 'module_view' module.id %}"
+                               class="module-card flex-none w-64 bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800">
+
+                                {% if module.cover_image %}
+                                    <img
+                                        src="{{ module.cover_image.url }}"
+                                        alt="{{ module.title }}"
+                                        class="w-full h-40 object-cover block">
+                                {% else %}
+                                    <div class="w-full h-40 bg-zinc-800 flex items-center justify-center text-zinc-600 text-sm">
+                                        No image
+                                    </div>
+                                {% endif %}
+
+                                <div class="p-4">
+                                    <h4 class="font-semibold text-sm leading-snug mb-1.5">
+                                        {{ module.title }}
+                                    </h4>
+                                    <p class="text-xs text-zinc-500">
+                                        {{ module.lessons.count }} lesson{{ module.lessons.count|pluralize }}
+                                    </p>
+                                </div>
+
+                            </a>
+
+                            {% empty %}
+
+                            <div class="text-sm text-zinc-600">
+                                No modules in this trail.
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                        <!-- Right button -->
+                        <button
+                            onclick="scrollCarousel('trail-{{ trail.id }}', 700)"
+                            class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/90 hover:bg-black border border-zinc-800 text-white px-3 py-7 rounded-l-lg transition">
+                            ❯
+                        </button>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-sm text-zinc-600">
+                    No trails in this course.
+                </p>
+
+                {% endfor %}
+
+            </section>
+
+        {% else %}
+
+        <p class="text-sm text-zinc-600">
+            You are not enrolled in any courses.
+        </p>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+<script>
+    function scrollCarousel(id, amount) {
+        document.getElementById(id).scrollBy({ left: amount, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

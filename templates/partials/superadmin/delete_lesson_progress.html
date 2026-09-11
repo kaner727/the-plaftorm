@@ -1,0 +1,6 @@
+{% if request.user.is_superuser and lesson_progress %}
+    <a href="{% url 'delete_progress' lesson_progress.id %}" class="btn btn-danger" 
+       onclick="return confirm('Are you sure you want to reset this lesson? This action cannot be undone.')"> 
+        Delete Progress
+    </a>
+{% endif %}

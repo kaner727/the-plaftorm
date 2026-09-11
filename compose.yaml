@@ -1,0 +1,17 @@
+name: the_platform
+
+services:
+  db:
+    image: postgres:15.6-alpine
+    container_name: the_platform_db
+    environment:
+      POSTGRES_DB: the_platform
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
