@@ -20,7 +20,7 @@ class Course(models.Model):
  
     THEME_CHOICES = [
         ('default', 'Default'),
-        ('gfour', 'G4-style theme'),
+        ('notdefault', 'Not default style theme just for testing'),
     ]   
     theme_slug = models.CharField(max_length=50, choices=THEME_CHOICES, default='default', verbose_name="Student Theme")
  

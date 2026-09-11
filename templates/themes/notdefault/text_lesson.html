@@ -3,7 +3,7 @@
     <div class="prose max-w-3xl text-slate-700">
         {{ current_lesson.get_text_content }}
     </div>
-    <h1>G4 THEME</h1>
+    <h1>NOT DEFAULT THEME</h1>
     <form method="post" class="mt-8" action="{% url 'complete_lesson' current_lesson.id %}">
         {% csrf_token %}
 
