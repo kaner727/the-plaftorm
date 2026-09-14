@@ -103,7 +103,7 @@ dev disclaimer: I've tried doing this as simple as possible. Please pay attentio
 Inside `templates/themes/`, create a new folder with your own theme slug:
 templates/themes/your_theme/
 
-**2. Crie os templates**
+**2. Add the templates**
 
 The folder HAS to contain these 6 html files:
 - base_module.html
